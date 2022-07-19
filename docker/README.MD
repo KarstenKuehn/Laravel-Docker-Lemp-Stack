@@ -82,7 +82,7 @@ Speichern und fertig!
 ```bash
 sudo nano /etc/hosts
 ```
-Zeile eintragen und speichern
+Zeilen eintragen und speichern
 ```text
 127.0.0.1       laravel-docker.localhost localhost
 ::1             laravel-docker.localhost localhost
