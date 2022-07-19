@@ -246,6 +246,8 @@ Der Service Supervisor-Daemon wird automatisch als Container gestartet.
 #### 5.3. Optionale Services
 Für weitere Services einfach die `docker-compose.yml` erweitern.
 
+`copy, paste & edit`
+
 ##### 5.3.1. phpmyadmin
 ```yaml
 # Database management
