@@ -20,7 +20,7 @@
 ```
 
 
-## 1. SSL Zertifikate erstellen
+## 1. SSL Zertifikate für localhost erstellen
 Es gibt 2 Optionen:
 - [mkcert](#mkcert)
 - [openssl](#openssl)
@@ -30,19 +30,29 @@ cd ./docker/nginx/certs
 ```
 
 ### 1.1. mkcert
+[Repository](https://github.com/FiloSottile/mkcert)
+
+#### 1.1.1. Installation
 ```bash
 sudo apt install libnss3-tools mkcert
 ```
-
+#### 1.1.2. Verzeichnis
 ```bash
 cd docker/nginx/certs/
 ```
 
+#### 1.1.3. Zertifikate erzeugen
 ```bash
 mkcert -key-file key.pem -cert-file cert.crt laravel-docker.localhost localhost 127.0.0.1 ::1
 ```
 
 ### 1.2. openssl
+[Dokumentation](https://letsencrypt.org/de/docs/certificates-for-localhost/)
+#### 1.2.1. Verzeichnis
+```bash
+cd docker/nginx/certs/
+```
+
 ```bash
 DOMAIN=localhost
 
@@ -67,12 +77,8 @@ sudo update-ca-certificates
 Öffne das Zertifikat mit einem Doppelklick und klicke in der Schlüsselbund-Verwaltung wähle `immer vertrauen`.
 Speichern und fertig!
 
-### 1.4. Nach dem erstellen der Zertifikate müssen die Container neu gestartet werden.
-```bash
-docker compose --env-file ./src/.env up -d --build
-```
 
-### 1.5. Domain lokal bekannt machen
+### 1.4. Domain lokal bekannt machen
 ```bash
 sudo nano /etc/hosts
 ```
