@@ -273,7 +273,7 @@ phpmyadmin:
     - laravel
   
 ```
-##### 5.3.1. mailhog (Email-Testing)
+##### 5.3.2. mailhog (Email-Testing)
 ```yaml
 mailhog:
   image: mailhog/mailhog:latest
@@ -294,4 +294,9 @@ Volumes erweitern
 ```yaml
 volumes:
   mailhog:
+```
+
+##### 5.3.3. reverse proxy testing
+```yaml
+kommt noch...
 ```
