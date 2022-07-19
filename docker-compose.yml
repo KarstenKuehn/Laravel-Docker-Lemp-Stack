@@ -1,0 +1,138 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx.dockerfile
+      args:
+        - UID=100999
+        - GID=100081
+        - USERNAME=${USERNAME:-laravel}
+        - GROUPNAME=${GROUPNAME:-www-data}
+    container_name: nginx
+    depends_on:
+      - php
+      - mysql
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/logs/webserver:/var/log/nginx
+    networks:
+      - laravel
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - mysqldb:/var/lib/mysql
+    networks:
+      - laravel
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_ROOT_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/php.dockerfile
+    container_name: php
+    restart: always
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - laravel
+    command: ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]
+
+  artisan:
+    build:
+      context: .
+      dockerfile: ./docker/php.dockerfile
+    container_name: artisan
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - laravel
+    depends_on:
+      - php
+      - mysql
+    entrypoint: [ 'php', '/var/www/html/artisan' ]
+
+  cron:
+    build:
+      context: .
+      dockerfile: ./docker/php.dockerfile
+    container_name: cron
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/logs/cron:/var/log/cron
+    networks:
+      - laravel
+    depends_on:
+      - php
+      - mysql
+      - nginx
+      - artisan
+    command: [ 'cron', '&&', 'tail', '-f', '/var/log/cron/laravel-scheduler.log' ]
+
+  supervisord:
+    build:
+      context: .
+      dockerfile: ./docker/php.dockerfile
+    container_name: supervisord
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/logs/supervisor:/var/log/supervisor
+    networks:
+      - laravel
+    depends_on:
+      - php
+      - mysql
+      - nginx
+      - artisan
+    command: ['/usr/bin/supervisord', '-n', '-c', '/etc/supervisor/supervisord.conf']
+
+
+
+
+  composer:
+    image: composer:latest
+    container_name: composer
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - laravel
+
+  npm:
+    build:
+      context: .
+      dockerfile: ./docker/node.dockerfile
+    container_name: npm
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - laravel
+    entrypoint: [ 'npm' ]
+
+
+volumes:
+  mysqldb:
+    driver: local
+
+networks:
+  laravel:
