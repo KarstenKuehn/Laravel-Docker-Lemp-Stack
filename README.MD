@@ -25,6 +25,13 @@ git clone git@github.com:KarstenKuehn/Docker-LEMP-Stack-f-r-Laravel.git
 ```
 
 ### 2. change remote url
+ersetze die git origin remote url:
 ```bash
 git remote set-url origin <new-git-repository-url>
+```
+
+### 3. modify .gitignore
+lösche den `src/` Eintrag in der [.gitignore](.gitignore):
+```text
+src/
 ```
