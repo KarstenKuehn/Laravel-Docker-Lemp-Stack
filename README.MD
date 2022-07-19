@@ -15,6 +15,7 @@
 - src/                  # Project Files: muss erst erstellt werden!
 - docker/               # Docker Konfiguration
 - .dockerignore         # was Docker ignorieren soll
+- .gitignore            # was Git ignorieren soll
 - docker-compose.yml    # Docker Container Services Konfiguration
 - README.MD             # Projekt Beschreibung: kann geändert werden
 ```
@@ -35,3 +36,6 @@ lösche den `src/` Eintrag in der [.gitignore](.gitignore):
 ```text
 src/
 ```
+
+### 4. adaption
+passe alles so an, wie und was du auch immer brauchst!
