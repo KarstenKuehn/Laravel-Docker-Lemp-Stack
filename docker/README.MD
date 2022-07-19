@@ -101,6 +101,19 @@ docker compose run --rm composer create-project laravel/laravel .
 ### 2.2. Laravel Berechtigungen setzen
 innerhalb von `src/`
 
+#### 2.2.1 Laravel Konfiguration
+
+passe deine `src/.env` Datei an:
+```text
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+DB_ROOT_PASSWORD=secret
+```
+
 ```bash
 cd src/
 ```
