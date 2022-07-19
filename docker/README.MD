@@ -135,21 +135,21 @@ sudo chmod -R ug+rwx storage bootstrap/cache
 ```
 
 
-## 4. Docker Container
+## 3. Docker Container
 `--env-file ./src/.env` aus der Laravel-Installation verwenden!
 
-### 4.1. Container build & starten
+### 3.1. Container build & starten
 ```bash
 docker compose --env-file ./src/.env up -d --build
 ```
-### 4.2. Berechtigungen
+### 3.2. Berechtigungen
 
-#### 4.2.1. (Container) User anzeigen
+#### 3.2.1. (Container) User anzeigen
 ```bash
 docker exec -it nginx cat /etc/passwd
 ```
 
-#### 4.2.2. (Container) Gruppen anzeigen 
+#### 3.2.2. (Container) Gruppen anzeigen 
 ```bash
 docker exec -it nginx cat /etc/group
 ```
@@ -158,42 +158,42 @@ docker exec -it nginx cat /etc/group
 www-data:x:<group-id>:
 ```
 
-#### 4.2.3. (Container) Berechtigungen setzen
+#### 3.2.3. (Container) Berechtigungen setzen
 
 ```bash
 docker exec -it nginx chgrp -R www-data /var/www/html/storage /var/www/html/bootstrap/cache
 ```
 
-#### 4.2.4. (Container) GroupID anzeigen & prüfen
+#### 3.2.4. (Container) GroupID anzeigen & prüfen
 ```bash
 docker exec -it nginx ls -n /var/www/html
 ```
 
-#### 4.2.5. (Host) GroupID anzeigen
+#### 3.2.5. (Host) GroupID anzeigen
 ```bash
 ls -n src/
 ```
 Die GroupId merken!
 
-#### 4.2.6. (Host) Berechtigungen setzen
+#### 3.2.6. (Host) Berechtigungen setzen
 
-##### 4.2.6.1 Gruppen anzeigen
+##### 3.2.6.1 Gruppen anzeigen
 ```bash
 cat /etc/group
 ```
-##### 4.2.6.2 Gruppe anlegen (sofern noch nicht vorhanden)
+##### 3.2.6.2 Gruppe anlegen (sofern noch nicht vorhanden)
 `mit GroupId`  
 ```bash
 sudo addgroup --gid 100032 laravel-docker-nginx
 ```
 
-##### 4.2.6.3 User zur neu angelegten Gruppe hinzufügen (sofern noch nicht vorhanden)
+##### 3.2.6.3 User zur neu angelegten Gruppe hinzufügen (sofern noch nicht vorhanden)
 ```bash
 sudo adduser $USER laravel-docker-nginx
 ```
 
-## 5. Container
-### 5.1. Composer
+## 4. Container
+### 4.1. Composer
 
 ```bash
 docker compose --env-file ./src/.env run --rm composer <command>
@@ -203,7 +203,7 @@ docker compose --env-file ./src/.env run --rm composer <command>
 docker compose --env-file ./src/.env run --rm composer install
 ```
 
-### 5.2. Artisan
+### 4.2. Artisan
 ```bash
 docker compose --env-file ./src/.env run --rm artisan <command>
 ```
@@ -213,8 +213,8 @@ docker compose --env-file ./src/.env run --rm artisan migrate:status
 ```
 
 
-### 5.3. NPM (Container)
-#### 5.3.1. Hinweis
+### 4.3. NPM (Container)
+#### 4.3.1. Hinweis
 `run` Optionen in der package.json beachten!
 
 ```bash
@@ -223,11 +223,11 @@ docker compose --env-file ./src/.env run --rm npm
 ```bash
 docker compose --env-file ./src/.env run --rm npm <command>
 ```
-#### 5.3.2. npm install
+#### 4.3.2. npm install
 ```bash
 docker compose --env-file ./src/.env run --rm npm install
 ```
-##### 5.3.3. npm kompilieren
+##### 4.3.3. npm kompilieren
 ```bash
 docker compose --env-file ./src/.env run --rm npm run build
 ```
@@ -236,8 +236,60 @@ docker compose --env-file ./src/.env run --rm npm run build
 docker compose --env-file ./src/.env run --rm npm run prod
 ```
 
-### 5.4. Laravel-Scheduler
+### 5. Services
+#### 5.1. Laravel-Scheduler
 Der Service Cron-Daemon wird automatisch als Container gestartet.
 
-### 5.5. Laravel-Queue
+#### 5.2. Laravel-Queue
 Der Service Supervisor-Daemon wird automatisch als Container gestartet.
+
+#### 5.3. Optionale Services
+Für weitere Services einfach die `docker-compose.yml` erweitern.
+
+##### 5.3.1. phpmyadmin
+```yaml
+# Database management
+phpmyadmin:
+  image: phpmyadmin/phpmyadmin:latest
+  container_name: "phpmyadmin"
+  environment:
+    - PMA_ARBITRARY=1
+    - UPLOAD_LIMIT=10G
+    - MEMORY_LIMIT=1G
+    - MAX_EXECUTION_TIME=3600
+    - HIDE_PHP_VERSION=true
+    - PMA_HOST=database
+    - PMA_USER=${DB_USERNAME}
+    - PMA_PASSWORD=${DB_PASSWORD}
+    - PMA_PORT=${DB_PORT}
+  restart: always
+  depends_on:
+    - mysql
+  ports:
+    - 8888:80
+  networks:
+    - laravel
+  
+```
+##### 5.3.1. mailhog (Email-Testing)
+```yaml
+mailhog:
+  image: mailhog/mailhog:latest
+  container_name: "mailhog"
+  ports:
+    - 1025:1025
+    - 8025:8025
+  networks:
+    - laravel
+  environment:
+    - MH_STORAGE=maildir
+    - MH_MAILDIR_PATH=maildir
+  volumes:
+    - mailhog:/home/mailhog:cached
+
+```
+Volumes erweitern
+```yaml
+volumes:
+  mailhog:
+```
