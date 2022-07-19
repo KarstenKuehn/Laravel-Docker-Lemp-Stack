@@ -30,7 +30,7 @@ cd ./docker/nginx/certs
 ```
 
 ### 1.1. mkcert
-[Repository](https://github.com/FiloSottile/mkcert)
+[Dokumentation](https://github.com/FiloSottile/mkcert)
 
 #### 1.1.1. Installation
 ```bash
