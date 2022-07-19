@@ -88,7 +88,7 @@ Zeilen eintragen und speichern
 ::1             laravel-docker.localhost localhost
 ```
 
-## 2. Laravel neu installieren
+## 2. Laravel Neuinstallation
 `src/` = Laravel
 ```bash
 mkdir src/ && cd src/
