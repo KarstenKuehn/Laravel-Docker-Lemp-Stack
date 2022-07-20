@@ -22,7 +22,7 @@
 
 ### 1. clone repository
 ```bash
-git clone git@github.com:KarstenKuehn/Docker-LEMP-Stack-f-r-Laravel.git
+git clone git@github.com:KarstenKuehn/Laravel-Docker-Lemp-Stack.git
 ```
 
 ### 2. change remote url
