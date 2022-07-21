@@ -94,7 +94,7 @@ Zeilen eintragen und speichern
 mkdir src/ && cd src/
 ```
 
-### 2.1 Laravel Projekt erzeugen
+### 2.1 Laravel Projekt neu anlegen
 ```bash
 docker compose run --rm composer create-project laravel/laravel .
 ```
