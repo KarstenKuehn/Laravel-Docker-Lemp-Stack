@@ -105,9 +105,6 @@ services:
       - artisan
     command: ['/usr/bin/supervisord', '-n', '-c', '/etc/supervisor/supervisord.conf']
 
-
-
-
   composer:
     image: composer:latest
     container_name: composer
