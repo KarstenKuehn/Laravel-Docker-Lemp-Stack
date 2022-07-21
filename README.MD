@@ -2,11 +2,11 @@
 
 ## Enthaltene Services
 
-- Nginx
+- Nginx Webserver
 - PHP-FPM
-- Mysql
-- Supervisor
-- Cron
+- Datenbank (Mysql)
+- Laravel Queue (Supervisor)
+- Laravel Schedule (Cron)
 
 
 ## Repository Struktur
